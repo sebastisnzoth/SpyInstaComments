@@ -1,55 +1,60 @@
-# Мониторинг комментариев в instagram
+# SpyInstaComments
 
-Крупные бренды тратят сотни тысяч на продвижение своих товаров и услуг в социальных сетях скупая весь возможный трафик в кабинетах рекламодателей. Что же касается малого бизнеса и мелких предпринимателей? У них все сложнее, низкие бюджеты и отрицательные ROI создают негативные впечатления от запуска таргетированной рекламы.
+Aplicación Django heredada para organizar y analizar comentarios de Instagram.
 
-## Как быть и что делать?
+## Estado de esta rama
 
-Я разработал веб-приложение, для мониторинга комментариев в публикациях профилей instagram. С его помощью вы сможете перехватывать горячих лидов со страниц ваших конкурентов.
+La rama `feat/local-safe-modernization` está preparada para ejecutar el proyecto localmente sin Docker en macOS Catalina/Python 3.10.
 
-## Для кого?
+También se eliminó la validación que consultaba el endpoint antiguo de Instagram `?__a=1`, porque ya no es una API pública fiable y actualmente puede devolver errores 401 o bloqueos temporales.
 
-Этот инструмент будет полезен всем, кто занимается продвижением товаров или услуг в instagram. Наверняка в вашей нише есть конкуренты с аудиторией подходящей под ваш бизнес.
+## Alcance
 
-## Как воспользоваться?
+Usar únicamente comentarios públicamente visibles, datos propios, exportaciones propias o integraciones para las que tengas autorización. Esta rama no intenta acceder a perfiles privados, mensajes directos, contraseñas, cookies ni sesiones de terceros.
 
-Проект с открытым исходным кодом. Он бесплатен для всех и для любого вида деятельности, никаких отчислений, ежемесячных оплат и регистраций через смс. Интерфейс приложения прост и интуитивно понятен.
+## Instalación local en macOS
 
-### Ключевые слова для поиска
-![img](https://egorovegor.ru/wp-content/webpc-passthru.php?src=https://egorovegor.ru/wp-content/uploads/Snimok-ekrana-2020-09-10-v-15.51.09.jpg&nocache=1)
-
-### Добавление отслеживаемых аккаунтов
-![img](https://egorovegor.ru/wp-content/webpc-passthru.php?src=https://egorovegor.ru/wp-content/uploads/Snimok-ekrana-2020-09-10-v-15.54.05.jpg&nocache=1)
-
-### Список отслеживаемых аккаунтов
-![img](https://egorovegor.ru/wp-content/webpc-passthru.php?src=https://egorovegor.ru/wp-content/uploads/Snimok-ekrana-2020-09-10-v-16.47.18.jpg&nocache=1)
-
-### Результаты мониторинга
-![img](https://egorovegor.ru/wp-content/webpc-passthru.php?src=https://egorovegor.ru/wp-content/uploads/Snimok-ekrana-2020-09-10-v-16.05.10.jpg&nocache=1)
-
-### Страница в instagram с результатом
-![img](https://egorovegor.ru/wp-content/webpc-passthru.php?src=https://egorovegor.ru/wp-content/uploads/Snimok-ekrana-2020-09-10-v-16.05.36.jpg&nocache=1)
-
-### Обновление информации
-![img](https://egorovegor.ru/wp-content/webpc-passthru.php?src=https://egorovegor.ru/wp-content/uploads/Snimok-ekrana-2020-09-10-v-16.49.47.jpg&nocache=1)
-
-Перед вами хорошая возможность воспользоваться бесплатным продуктом, который поможет увеличить количество прибыли в ваш бизнес.
-
-## Установка
-Клонируем репозиторий GitHub
-```shell
-git clone https://github.com/r4hx/SpyInstaComments.git
-```
-Переходим в каталог с программой
-```shell
+```bash
+cd /Volumes/Armazenamento/developer
+git clone https://github.com/sebastisnzoth/SpyInstaComments.git
 cd SpyInstaComments
-```
-Запускаем сборку docker контейнера
-```shell
-docker build -t SpyInstaComments .
-```
-Дожидаемся окончания сборки и запускаем наш контейнер
-```shell
-docker run -p80:80/tcp SpyInstaComments
-```
-Открываем браузер и вводим адреc http://127.0.0.1 логин и пароль **admin**:**admin**
+git checkout feat/local-safe-modernization
 
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
+```
+
+## Base de datos
+
+El repositorio incluye una base SQLite heredada. Para una instalación limpia es preferible crear una base nueva localmente:
+
+```bash
+mv db.sqlite3 db.sqlite3.legacy 2>/dev/null || true
+python3 manage.py migrate
+python3 manage.py createsuperuser
+```
+
+## Ejecutar
+
+```bash
+python3 manage.py runserver 127.0.0.1:8000
+```
+
+Abrí en el navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Dependencias
+
+- Django 3.2.25
+- requests 2.x
+
+Se fijó Django 3.2.x para mantener compatibilidad con el código original, generado alrededor de Django 3.1, y con Python 3.10.
+
+## Próximo paso recomendado
+
+Reemplazar la lógica antigua de scraping de Instagram por una fuente autorizada o por importación local de CSV/JSON con comentarios exportados. De esa forma la interfaz de monitoreo puede seguir utilizándose sin depender de endpoints privados o inestables de Instagram.
